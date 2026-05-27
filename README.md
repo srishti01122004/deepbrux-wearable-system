@@ -21,7 +21,8 @@ This is a sole-designed hardware + firmware project, not a software-only impleme
 |---|---|
 | Microcontroller | Teensy 4.1 (ARM Cortex-M7, 600 MHz) |
 | Sensor | Piezoelectric transducer (selected for jaw-surface contact mechanics and sub-mV signal sensitivity) |
-| Interface | SPI / I2C |
+| Sensor interface | Direct ADC (piezoelectric → AFE → Teensy ADC pin) |
+| Data logging | SD card over SPI |
 | Acquisition rate | 200 Hz continuous, interrupt-driven |
 | Analogue front-end | Custom signal conditioning circuit: amplification, noise filtering, impedance matching for piezoelectric source |
 | Power | Low-power design for wearable form factor |
@@ -60,9 +61,8 @@ Annotated dataset → ML training pipeline
 ```
 
 Key firmware details:
-- ISR-driven ADC sampling with hardware timer — no polling, deterministic latency
-- SPI/I2C peripheral drivers written from scratch (bare-metal register access)
-- Timestamped data logging for reproducible dataset annotation
+- ISR-driven ADC sampling with hardware timer — no polling, deterministic 200 Hz latency
+- Timestamped data logging to SD card over SPI for reproducible dataset annotation
 - Validated for timing jitter across extended recording sessions
 
 ---
@@ -106,31 +106,6 @@ The dataset was collected entirely using this hardware system — no existing pu
                     │   86% accuracy        │
                     │   6 activity classes  │
                     └──────────────────────┘
-```
-
----
-
-## Repository Structure
-
-```
-DeepBrux/
-├── firmware/           # Teensy 4.1 bare-metal Embedded C firmware
-│   ├── main.c          # ISR-driven acquisition loop
-│   ├── spi_driver.c    # Bare-metal SPI peripheral driver
-│   ├── filter.c        # FIR filter implementation
-│   └── pipeline.c      # 4-stage signal pipeline
-├── signal_processing/  # Python preprocessing scripts
-│   ├── segmentation.py
-│   ├── spectrogram.py
-│   └── augmentation.py
-├── model/              # ResNet-18 training and evaluation
-│   ├── train.py
-│   ├── evaluate.py
-│   └── resnet18_bruxism.ipynb
-├── hardware/           # AFE schematic (KiCad)
-│   └── afe_schematic/
-├── results/            # Accuracy plots, confusion matrix
-└── README.md
 ```
 
 ---
