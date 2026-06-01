@@ -30,6 +30,8 @@ This is a sole-designed hardware + firmware project, not a software-only impleme
 The analogue front-end was designed from scratch — piezoelectric transducers present high source impedance and generate sub-mV signals that require careful conditioning before digitisation. The AFE handles amplification, high-pass filtering for baseline removal, and anti-aliasing before ADC sampling.
 
 ---
+<img width="551" height="253" alt="FIG1" src="https://github.com/user-attachments/assets/96ed680f-5f59-4b49-9d46-fd706c67449b" />
+
 
 ## Firmware Architecture
 
