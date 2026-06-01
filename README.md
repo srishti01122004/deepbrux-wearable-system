@@ -35,7 +35,6 @@ The analogue front-end was designed from scratch — piezoelectric transducers p
 
 ## Firmware Architecture
 
-Written in **bare-metal Embedded C** on Teensy 4.1. No RTOS — all timing is interrupt-driven via hardware timers to guarantee deterministic 200 Hz sampling.
 
 **4-stage on-device pipeline:**
 
@@ -43,7 +42,7 @@ Written in **bare-metal Embedded C** on Teensy 4.1. No RTOS — all timing is in
 Raw piezo signal (200 Hz)
         │
         ▼
-[Stage 1] FIR Filtering
+[Stage 1] bandpass and notch Filtering
         Noise suppression + baseline wander removal
         │
         ▼
@@ -92,13 +91,8 @@ The dataset was collected entirely using this hardware system — no existing pu
 │                                                     │
 │  Piezo Sensor → AFE Circuit → Teensy 4.1 (200 Hz)  │
 │                               │                     │
-│                        [Interrupt-driven ISR]        │
-│                               │                     │
-│              ┌────────────────▼────────────────┐    │
-│              │     On-device Signal Pipeline    │    │
-│              │  Filter → Segment → Spectrogram  │    │
-│              │        → Augment → Log           │    │
-│              └────────────────┬────────────────┘    │
+│                               │
+│                               │                     │   │
 └───────────────────────────────┼─────────────────────┘
                                 │
                     Annotated Dataset (custom)
